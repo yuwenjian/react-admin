@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
-// import {Button, message} from "antd";
-// import 'antd/dist/antd.css'
+
 import {BrowserRouter,Route,Switch} from "react-router-dom";
 import Login from './pages/login/login'
 import Admin from './pages/admin/admin'
@@ -12,7 +11,7 @@ export default class App extends Component{
             <BrowserRouter>
                 <Switch> {/*只匹配其中一个页面*/}
                  <Route path="/login" component={Login}></Route>
-                 <Route path="/admin" component={Admin}></Route>
+                 <Route path="/" component={Admin}></Route>
                 </Switch>
             </BrowserRouter>
         )

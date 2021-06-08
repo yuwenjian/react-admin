@@ -1,24 +1,37 @@
-import React, {Component} from 'react'
+import React, {Component, memo} from 'react'
 import './login.less'
 import logo from './image/logo.png'
-import { Form, Input, Button } from 'antd';
+import { Form, Input, Button ,message} from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import {reqLogin} from "../../api";
+import memonyUnilt from "../../unitls/memonyUnilt";
+import storageUtils from "../../unitls/storageUtils";
+import {Redirect} from "react-router-dom";
 /*
 * 登陆的路由组键
 * */
 const Item = Form.Item;
 export default class Login extends Component{
 
-         onFinish = (values) => {
-            console.log('开始ajax验证  ', values);
-            const {username, password} = values
-            reqLogin(username,password).then(response=>{
-                console.log(response)
-            }).catch(error=>{
-                console.log(error)
-            })
-        };
+    onFinish = async (values) => {
+        console.log('开始ajax验证  ', values);
+        const {username, password} = values
+        const result = await  reqLogin(username,password)
+        if(result.status === 0){
+            // 保存用户信息到memonyUnitl中的user对象(内存存储)
+            memonyUnilt.user = result.data
+             // 将用户信息需要local持久化存储
+            storageUtils.saveUser(result.data)
+
+            // 登陆成功跳转到admn界面
+            this.props.history.replace('/')
+        }else{
+            // 登陆失败
+            message.error('登陆失败！'+result.msg)
+        }
+
+
+    };
 
     validator = (rule, value, callback) => {
         const length = value && value.length
@@ -35,12 +48,18 @@ export default class Login extends Component{
             callback()
         }
     }
-        render() {
-         return(
+    render() {
+        const user= memonyUnilt.user
+
+        if(user && user._id){
+            return <Redirect to='/'/>
+        }
+
+        return(
             <div className="login">
                 <header className="login-header">
                     <img src={logo} alt='logo'/>
-                    <h1>React:后台管理系统</h1>
+                    <h1>SB:后台管理系统</h1>
                 </header>
                 <section className="login-content">
                     <div>
@@ -69,7 +88,7 @@ export default class Login extends Component{
                                     {required: true, message: '请输入密码！'},
                                     // 自定义表单校验规则
                                     {validator: this.validator}
-                                    ]}
+                                ]}
                             >
                                 <Input
                                     prefix={<LockOutlined className="site-form-item-icon" />}
