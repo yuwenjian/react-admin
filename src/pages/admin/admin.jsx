@@ -2,12 +2,14 @@ import React, {Component} from 'react'
 import memonyUnilt from "../../unitls/memonyUnilt";
 import {Redirect} from 'react-router-dom'
 import { Layout } from 'antd';
+import LefNav from "../../components/lef-nav";
+import Header from "../../components/header";
 
 /*
 * 后台管理路由组建
 * */
 
-const { Header, Footer, Sider, Content } = Layout;
+const {Footer, Sider, Content } = Layout;
 
 export default class Admin extends Component{
 
@@ -21,11 +23,13 @@ export default class Admin extends Component{
            }else{
               return(
                       <Layout style={{height: '100%'}}>
-                          <Sider>Sider</Sider>
+                          <Sider>
+                              <LefNav />
+                          </Sider>
                           <Layout>
                               <Header>Header</Header>
-                              <Content>Content</Content>
-                              <Footer>Footer</Footer>
+                              <Content style={{backgroundColor: "#fff"}}>Content</Content>
+                              <Footer style={{textAlign: "center", color: "#cccccc"}}>推荐使用Google浏览器，可以获取更好的体验！</Footer>
                           </Layout>
                       </Layout>
 
